@@ -49,9 +49,7 @@ public class Scroller {
             "luka i seckanu vezu pershuna...            ";
 */
 
-    public String scrollText = "#4 your first and best #1 choice for #2 professional trainings in the field of ict, #3" +
-            " cisco network solutions, apple products and development of mobile applications on android and ios platforms.              ";
-
+    public final String scrollText = "              #4 kitty, kitty,   #2 soft and white, likes to sleep all through the night. wake up kitty, it’s morning now. wake up kitty, meow, meow, meow.";
 
     public Scroller(int fontWidth, int fontHeight, MainPanel panel) {
         this.fontBitmap = fontBitmap;

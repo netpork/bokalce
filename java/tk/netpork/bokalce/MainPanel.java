@@ -1,6 +1,7 @@
 package tk.netpork.bokalce;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -57,12 +58,14 @@ public class MainPanel extends SurfaceView implements SurfaceHolder.Callback, On
         setFocusable(true);
         setOnTouchListener(this);
 
+
         plopSound1 = MediaPlayer.create(context, R.raw.plop0);
         plopSound2 = MediaPlayer.create(context, R.raw.plop1);
         plopSound3 = MediaPlayer.create(context, R.raw.plop2);
 
 
         mThread = new MainThread(getHolder(), this);
+
     }
 
     public void update(Canvas canvas) {
@@ -98,10 +101,14 @@ public class MainPanel extends SurfaceView implements SurfaceHolder.Callback, On
     @Override
     public void surfaceCreated(SurfaceHolder surfaceHolder) {
         Log.i(TAG, "surface-created");
-
         initBobbles();
         mScroller = new Scroller(16, 22, this);
 
+        mThread.running = true;
+        mThread.start();
+
+        modPlayer = new ModMusic(MainPanel.context, R.raw.xality);
+        modPlayer.play();
     }
 
     @Override
@@ -131,6 +138,8 @@ public class MainPanel extends SurfaceView implements SurfaceHolder.Callback, On
             } catch (InterruptedException e) {}
         }
 
+        ((Activity) getContext()).finish();
+
 //        Log.i(TAG, String.valueOf(screenWidth) + " " + String.valueOf(screenHeight) + " " + String.valueOf(density));
         Log.i(TAG, "thread shutdown clearly...");
     }
@@ -144,11 +153,7 @@ public class MainPanel extends SurfaceView implements SurfaceHolder.Callback, On
 
         mVideo = new Video(this);
 
-        mThread.running = true;
-        mThread.start();
 
-        modPlayer = new ModMusic(MainPanel.context, R.raw.xality);
-        modPlayer.play();
 
     }
 
