@@ -54,10 +54,10 @@ public class Video {
 
         yOffset = (int) (((MainPanel.screenHeight - (height * aspect) + 0.5) / 2) / aspect);
 
-        Log.i(TAG, "======= yoffset: " + yOffset);
-        Log.i(TAG, "======= height: " + MainPanel.screenHeight);
-        Log.i(TAG, "======= aspect: " + aspect);
-        Log.i(TAG, "======= aspectt: " + (height * aspect));
+//        Log.i(TAG, "======= yoffset: " + yOffset);
+//        Log.i(TAG, "======= height: " + MainPanel.screenHeight);
+//        Log.i(TAG, "======= aspect: " + aspect);
+//        Log.i(TAG, "======= aspectt: " + (height * aspect));
 
     }
 

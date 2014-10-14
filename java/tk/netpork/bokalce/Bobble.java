@@ -34,10 +34,10 @@ public class Bobble extends Sprite {
             tickDelay = 0;
             if (isTouched() && currentFrame < frameCount)  {
                 if (currentFrame == 2) {
-//                    MainPanel.playSample(MainPanel.RND.nextInt(3));
+                    MainPanel.playSample(MainPanel.RND.nextInt(3));
                 }
                 currentFrame++;
-                yAdder = -1;
+                yAdder = -(MainPanel.RND.nextInt(10));
             }
         }
 

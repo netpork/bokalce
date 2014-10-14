@@ -6,6 +6,8 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.media.MediaPlayer;
+import android.provider.MediaStore;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -41,6 +43,7 @@ public class MainPanel extends SurfaceView implements SurfaceHolder.Callback, On
     public static final Random RND = new Random();
     public static final double radians = Math.PI / 180.0;
     private float lastTouchX, lastTouchY;
+    private static MediaPlayer plopSound1, plopSound2, plopSound3;
 
 
     private String avgFps;
@@ -53,6 +56,12 @@ public class MainPanel extends SurfaceView implements SurfaceHolder.Callback, On
         getHolder().addCallback(this);
         setFocusable(true);
         setOnTouchListener(this);
+
+        plopSound1 = MediaPlayer.create(context, R.raw.plop0);
+        plopSound2 = MediaPlayer.create(context, R.raw.plop1);
+        plopSound3 = MediaPlayer.create(context, R.raw.plop2);
+
+
         mThread = new MainThread(getHolder(), this);
     }
 
@@ -67,7 +76,7 @@ public class MainPanel extends SurfaceView implements SurfaceHolder.Callback, On
 //        Log.i(TAG, "***** render");
 
 //        canvas.drawColor(Color.RED);
-        mVideo.mCanvas.drawColor(Color.WHITE);
+        mVideo.mCanvas.drawColor(0xffecf0f1);
         boolean djidjiDrawn = false;
 
         for (int i = 0; i < bobblesCount; i++) {
@@ -93,12 +102,6 @@ public class MainPanel extends SurfaceView implements SurfaceHolder.Callback, On
         initBobbles();
         mScroller = new Scroller(16, 22, this);
 
-        mThread.running = true;
-        mThread.start();
-
-        modPlayer = new ModMusic(MainPanel.context, R.raw.xality);
-        modPlayer.play();
-
     }
 
     @Override
@@ -110,6 +113,13 @@ public class MainPanel extends SurfaceView implements SurfaceHolder.Callback, On
     public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
         Log.i(TAG, "surface-destroyed");
         modPlayer.stop();
+
+        plopSound1.stop();
+        plopSound1.release();
+        plopSound2.stop();
+        plopSound2.release();
+        plopSound3.stop();
+        plopSound3.release();
 
         boolean retry = true;
         mThread.running = false;
@@ -133,6 +143,13 @@ public class MainPanel extends SurfaceView implements SurfaceHolder.Callback, On
         screenHeight = h;
 
         mVideo = new Video(this);
+
+        mThread.running = true;
+        mThread.start();
+
+        modPlayer = new ModMusic(MainPanel.context, R.raw.xality);
+        modPlayer.play();
+
     }
 
     public void initBobbles() {
@@ -179,5 +196,22 @@ public class MainPanel extends SurfaceView implements SurfaceHolder.Callback, On
             return true;
         }
         return false;
+    }
+
+    public static void playSample(int which) {
+        switch (which) {
+            case 0:
+                plopSound1.start();
+                break;
+            case 1:
+                plopSound2.start();
+                break;
+            case 2:
+                plopSound3.start();
+                break;
+
+            default:
+                break;
+        }
     }
 }
