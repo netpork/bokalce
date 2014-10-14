@@ -2,6 +2,7 @@ package tk.netpork.bokalce;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +12,7 @@ public class Bobble extends Sprite {
 
     public Bitmap[] bubbles = {Video.bobl1, Video.bobl2, Video.bobl3, Video.bobl4, Video.bobl5, Video.bobl6};
 
-    public Bobble(int tileWidth, int tileHeight, int frameCount,	int animDelay) {
+    public Bobble(int tileWidth, int tileHeight, int frameCount, int animDelay) {
         super();
         this.frameCount = frameCount;
         this.tileWidth = tileWidth;
@@ -26,14 +27,14 @@ public class Bobble extends Sprite {
     }
 
     public void update(Canvas c) {
-/*
+
         if (tickDelay <= animDelay) {
             tickDelay++;
         } else {
             tickDelay = 0;
             if (isTouched() && currentFrame < frameCount)  {
                 if (currentFrame == 2) {
-                    MainPanel.playSample(RND.nextInt(3));
+//                    MainPanel.playSample(MainPanel.RND.nextInt(3));
                 }
                 currentFrame++;
                 yAdder = -1;
@@ -43,7 +44,7 @@ public class Bobble extends Sprite {
         if (isTouched() && currentFrame == 5) {
             newBubble();
         }
-*/
+
 
         if (y >= -tileWidth) {
             y -= yAdder;
@@ -52,32 +53,49 @@ public class Bobble extends Sprite {
         }
 
         angle += angleAdder;
-        x = (int) (Math.sin(radians * angle) * offset) + (Video.width / 2) - tileWidth;
+        x = (int) (Math.sin(MainPanel.radians * angle) * offset) + (Video.width / 2) - tileWidth;
         super.draw(c, (int) x, (int) y, tileWidth, tileHeight, bubbles[currentFrame]);
     }
 
-    public void handleAction(int eventX, int eventY) {
-        if(isTouched()) return;
+    public void handleAction(float eventX, float eventY) {
+//        if(isTouched()) return;
+        if (touched) return;
+
+        touched = false;
+        // translate screen touch positions to video buffer size
+        final int whereXPercentage = (int) (((eventX * 100) - MainPanel.screenWidth) / MainPanel.screenWidth);
+        final int whereYPercentage = (int) (((eventY * 100) - MainPanel.screenHeight) / MainPanel.screenHeight);
+//        Log.i(TAG, "----------" + whereXPercentage + " " + whereYPercentage);
+
+        eventX = ((Video.width * whereXPercentage) / 100);
+        eventY = ((Video.height * whereYPercentage) / 100) - Video.yOffset;
+//        Log.i(TAG, "---------e:" + eventX + " " + eventY);
 
         if (eventX >= x && (eventX <= (x + tileWidth))) {
             if (eventY >= y && (eventY <= (y + tileHeight))) {
                 // touched
-                setTouched(true);
-            } else {
-                setTouched(false);
+//                setTouched(true);
+                touched = true;
             }
-        } else {
-            setTouched(false);
         }
+
+//            else {
+////                setTouched(false);
+//                touched = false;
+//            }
+//        } else {
+////            setTouched(false);
+//            touched = false;
+//        }
     }
 
     public void newBubble() {
-        x = RND.nextInt(Video.width - tileWidth);
+        x = MainPanel.RND.nextInt(Video.width - tileWidth);
         y = Video.height + tileHeight;
-//        y = RND.nextInt(Video.height - tileHeight);
-        offset = RND.nextDouble() * Video.width / 2;
-        angleAdder = RND.nextDouble() * 5;
-        yAdder = (RND.nextDouble() * 5) + 0.5;
+//        y = MainPanel.RND.nextInt(Video.height - tileHeight);
+        offset = MainPanel.RND.nextDouble() * Video.width / 2;
+        angleAdder = MainPanel.RND.nextDouble() * 5;
+        yAdder = (MainPanel.RND.nextDouble() * 5) + 0.5;
         currentFrame = 0;
         setTouched(false);
     }

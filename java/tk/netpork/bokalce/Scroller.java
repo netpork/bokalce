@@ -15,7 +15,7 @@ public class Scroller {
     private final MainPanel mPanel;
 
     public final int fontWidth, fontHeight;
-    private int scrollThreshold;
+    private float scrollThreshold;
 
     private final float realFontWidth, realFontHeight;
 
@@ -94,8 +94,8 @@ public class Scroller {
         if (c == '#') {
             // new scroll speed, skip #speed
             textScrollIndex += 3;
-            scrollThreshold =  Character.getNumericValue(scrollText.charAt(index + 1));
-            Log.i(TAG, "scrollt=========" + scrollThreshold);
+            scrollThreshold = Character.getNumericValue(scrollText.charAt(index + 1));
+//            Log.i(TAG, "scrollt=========" + scrollThreshold);
             c = scrollText.charAt(index + 3);
         }
 

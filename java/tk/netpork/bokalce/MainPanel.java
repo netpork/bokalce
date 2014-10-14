@@ -3,24 +3,27 @@ package tk.netpork.bokalce;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Rect;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
+import android.view.View.OnTouchListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+
 
 
 /**
  * Created by netpork on 10/3/14.
  */
-public class MainPanel extends SurfaceView implements SurfaceHolder.Callback {
+public class MainPanel extends SurfaceView implements SurfaceHolder.Callback, OnTouchListener {
     private static final String TAG = "MainPanel";
     private ModMusic modPlayer;
     private MainThread mThread;
@@ -35,6 +38,10 @@ public class MainPanel extends SurfaceView implements SurfaceHolder.Callback {
     private List<Bobble> bobbles = new ArrayList<Bobble>();
     private static final int bobblesCount = 50;
     private Bitmap bobblesBitmap;
+    public static final Random RND = new Random();
+    public static final double radians = Math.PI / 180.0;
+    private float lastTouchX, lastTouchY;
+
 
     private String avgFps;
     
@@ -45,6 +52,7 @@ public class MainPanel extends SurfaceView implements SurfaceHolder.Callback {
 
         getHolder().addCallback(this);
         setFocusable(true);
+        setOnTouchListener(this);
         mThread = new MainThread(getHolder(), this);
     }
 
@@ -74,7 +82,6 @@ public class MainPanel extends SurfaceView implements SurfaceHolder.Callback {
 
         mScroller.update(mVideo.mCanvas);
         mVideo.update(canvas);
-
 
         displayFps(canvas, avgFps);
     }
@@ -129,7 +136,7 @@ public class MainPanel extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     public void initBobbles() {
-        bobblesBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.boobles, mVideo.optionsNoScale);
+//        bobblesBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.boobles, mVideo.optionsNoScale);
 
         for(int i = 0; i < bobblesCount; i++) {
             bobbles.add(new Bobble(64, 64, 6, 1));
@@ -162,4 +169,15 @@ public class MainPanel extends SurfaceView implements SurfaceHolder.Callback {
         }
     }
 
+    @Override
+    public boolean onTouch(View view, MotionEvent event) {
+//        Log.i(TAG, "touched=======:" + event.getX() + " " + event.getY());
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            for (Bobble b : bobbles) {
+                b.handleAction(event.getX(), event.getY());
+            }
+            return true;
+        }
+        return false;
+    }
 }

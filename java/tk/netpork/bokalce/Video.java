@@ -3,7 +3,6 @@ package tk.netpork.bokalce;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.util.Log;
 
 /**
@@ -27,7 +26,7 @@ public class Video {
     public static final int djidjiX = (width - 96) / 2;
     public static final int djidjiY = (height - 98) / 2;
 
-    private int yOffset;
+    public static int yOffset;
 
     public Video(MainPanel panel) {
         mPanel = panel;

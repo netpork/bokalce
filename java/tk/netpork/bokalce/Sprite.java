@@ -14,8 +14,7 @@ public class Sprite {
     public double x, y;
     public int frameCount, tileWidth, tileHeight, animDelay, tickDelay = 0, currentFrame = 0;
     public double offset, angle, angleAdder, yAdder;
-    public static final double radians = Math.PI / 180.0;
-    public static final Random RND = new Random();
+
 
     public Sprite() {}
 
