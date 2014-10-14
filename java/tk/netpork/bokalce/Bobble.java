@@ -2,10 +2,6 @@ package tk.netpork.bokalce;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.util.Log;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class Bobble extends Sprite {
     private static final String TAG = MainThread.class.getCanonicalName();

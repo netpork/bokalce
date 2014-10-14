@@ -2,9 +2,6 @@ package tk.netpork.bokalce;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Rect;
-
-import java.util.Random;
 
 public class Sprite {
     private static final String TAG = MainThread.class.getCanonicalName();

@@ -78,7 +78,7 @@ public class MainThread extends Thread {
                     frameSkipped = 0;
 
                     if (canvas != null) {
-                        mPanel.update(canvas);
+//                        mPanel.update(canvas);
                         mPanel.render(canvas);
                     }
 

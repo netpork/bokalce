@@ -7,7 +7,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Rect;
-import android.util.Log;
 
 public class Scroller {
     public static final String TAG = MainThread.class.getCanonicalName();

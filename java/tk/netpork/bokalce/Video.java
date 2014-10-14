@@ -3,7 +3,6 @@ package tk.netpork.bokalce;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.util.Log;
 
 /**
  * Created by netpork on 10/10/14.

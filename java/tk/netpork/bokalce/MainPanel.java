@@ -5,10 +5,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.media.MediaPlayer;
-import android.provider.MediaStore;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -58,14 +56,11 @@ public class MainPanel extends SurfaceView implements SurfaceHolder.Callback, On
         setFocusable(true);
         setOnTouchListener(this);
 
-
         plopSound1 = MediaPlayer.create(context, R.raw.plop0);
         plopSound2 = MediaPlayer.create(context, R.raw.plop1);
         plopSound3 = MediaPlayer.create(context, R.raw.plop2);
 
-
         mThread = new MainThread(getHolder(), this);
-
     }
 
     public void update(Canvas canvas) {
