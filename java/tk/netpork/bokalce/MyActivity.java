@@ -3,6 +3,7 @@ package tk.netpork.bokalce;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -27,6 +28,13 @@ public class MyActivity extends Activity {
 
         setContentView(mPanel);
 
+    }
+
+    @Override
+    public void onBackPressed() {
+//        super.onBackPressed();
+        mPanel.end = true;
+        Log.i(TAG, "------------------------------ back pressed");
     }
 
     @Override
@@ -58,6 +66,5 @@ public class MyActivity extends Activity {
     protected void onDestroy() {
         super.onDestroy();
     }
-
 
 }

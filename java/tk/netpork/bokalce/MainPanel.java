@@ -4,7 +4,10 @@ package tk.netpork.bokalce;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Camera;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.media.MediaPlayer;
 import android.util.DisplayMetrics;
@@ -31,6 +34,9 @@ public class MainPanel extends SurfaceView implements SurfaceHolder.Callback, On
     private Video mVideo;
     private Scroller mScroller;
 
+    private Camera mCamera;
+    private Matrix mMatrix;
+
     private static Context context;
 
     public static int screenWidth, screenHeight;
@@ -41,9 +47,14 @@ public class MainPanel extends SurfaceView implements SurfaceHolder.Callback, On
     private Bitmap bobblesBitmap;
     public static final Random RND = new Random();
     public static final double radians = Math.PI / 180.0;
+    public double cameraZoom = 0;
     private float lastTouchX, lastTouchY;
     private static MediaPlayer plopSound1, plopSound2, plopSound3;
+    private float djidjiAngle = 0;
 
+    public boolean end = false;
+    public boolean lastPart = false;
+    private float startOpacity = 0, endOpacity = 255;
 
     private String avgFps;
     
@@ -60,6 +71,11 @@ public class MainPanel extends SurfaceView implements SurfaceHolder.Callback, On
         plopSound2 = MediaPlayer.create(context, R.raw.plop1);
         plopSound3 = MediaPlayer.create(context, R.raw.plop2);
 
+        mCamera = new Camera();
+        mMatrix = new Matrix();
+
+//        mCamera.save();
+
         mThread = new MainThread(getHolder(), this);
     }
 
@@ -74,6 +90,7 @@ public class MainPanel extends SurfaceView implements SurfaceHolder.Callback, On
 //        Log.i(TAG, "***** render");
 
 //        canvas.drawColor(Color.RED);
+
         mVideo.mCanvas.drawColor(0xffecf0f1);
         boolean djidjiDrawn = false;
 
@@ -88,7 +105,12 @@ public class MainPanel extends SurfaceView implements SurfaceHolder.Callback, On
         }
 
         mScroller.update(mVideo.mCanvas);
+
+        if (end) drawEnd(mVideo.mCanvas);
+        if (lastPart) drawLastPart(mVideo.mCanvas);
+
         mVideo.update(canvas);
+
 
         displayFps(canvas, avgFps);
     }
@@ -133,7 +155,6 @@ public class MainPanel extends SurfaceView implements SurfaceHolder.Callback, On
             } catch (InterruptedException e) {}
         }
 
-        ((Activity) getContext()).finish();
 
 //        Log.i(TAG, String.valueOf(screenWidth) + " " + String.valueOf(screenHeight) + " " + String.valueOf(density));
         Log.i(TAG, "thread shutdown clearly...");
@@ -147,8 +168,6 @@ public class MainPanel extends SurfaceView implements SurfaceHolder.Callback, On
         screenHeight = h;
 
         mVideo = new Video(this);
-
-
 
     }
 
@@ -166,6 +185,7 @@ public class MainPanel extends SurfaceView implements SurfaceHolder.Callback, On
 //        paint.setDither(false);
 //        paint.setAntiAlias(false);
 //        paint.setFilterBitmap(false);
+
         canvas.drawBitmap(mVideo.djidji, Video.djidjiX, Video.djidjiY, null);
     }
 
@@ -213,5 +233,36 @@ public class MainPanel extends SurfaceView implements SurfaceHolder.Callback, On
             default:
                 break;
         }
+    }
+
+    public void drawEnd(Canvas canvas) {
+        final float delta = (endOpacity - startOpacity);
+        startOpacity += delta * 0.009f;
+
+//        Log.i(TAG, "opac ----" + startOpacity + " " + endOpacity);
+
+        if (delta <= 4) {
+            startOpacity = 255;
+            endOpacity = 0;
+            end = false;
+            lastPart = true;
+//            ((Activity) getContext()).finish();
+        }
+
+        canvas.drawColor((int) startOpacity << 24 | 0xffffff);
+    }
+
+    public void drawLastPart(Canvas canvas) {
+        final float delta = (startOpacity - endOpacity);
+        startOpacity -= delta * 0.05f;
+
+        canvas.drawColor(Color.BLACK);
+        canvas.drawBitmap(mVideo.ilkke, (Video.width - 101) / 2, (Video.height - 125) / 2, null);
+        canvas.drawColor((int) startOpacity << 24 | 0xffffff);
+
+        if (delta <= 4) {
+            ((Activity) getContext()).finish();
+        }
+
     }
 }
