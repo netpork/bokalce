@@ -32,19 +32,15 @@ public class MainPanel extends SurfaceView implements SurfaceHolder.Callback, On
     private ModMusic modPlayer;
     private MainThread mThread;
     private Video mVideo;
-    private Scroller mScroller;
+    private Ginger mGinger;
 
-    private Camera mCamera;
-    private Matrix mMatrix;
+//    private Camera mCamera;
+//    private Matrix mMatrix;
 
     private static Context context;
 
     public static int screenWidth, screenHeight;
     public static float density;
-
-    private List<Bobble> bobbles = new ArrayList<Bobble>();
-    private static final int bobblesCount = 50;
-    private Bitmap bobblesBitmap;
     public static final Random RND = new Random();
     public static final double radians = Math.PI / 180.0;
     public double cameraZoom = 0;
@@ -52,9 +48,15 @@ public class MainPanel extends SurfaceView implements SurfaceHolder.Callback, On
     private static MediaPlayer plopSound1, plopSound2, plopSound3;
     private float djidjiAngle = 0;
 
-    public boolean end = false;
-    public boolean lastPart = false;
-    private float startOpacity = 0, endOpacity = 255;
+
+    // section flags
+    protected static int part = 0;
+    protected static boolean endIntro = false;
+
+    public static boolean gingerPart = true;
+
+    public static boolean strechkoStart = true;
+    public static boolean strechkoEnd = false;
 
     private String avgFps;
     
@@ -71,12 +73,13 @@ public class MainPanel extends SurfaceView implements SurfaceHolder.Callback, On
         plopSound2 = MediaPlayer.create(context, R.raw.plop1);
         plopSound3 = MediaPlayer.create(context, R.raw.plop2);
 
-        mCamera = new Camera();
-        mMatrix = new Matrix();
+//        mCamera = new Camera();
+//        mMatrix = new Matrix();
 
 //        mCamera.save();
 
         mThread = new MainThread(getHolder(), this);
+
     }
 
     public void update(Canvas canvas) {
@@ -90,27 +93,16 @@ public class MainPanel extends SurfaceView implements SurfaceHolder.Callback, On
 //        Log.i(TAG, "***** render");
 
 //        canvas.drawColor(Color.RED);
+//        mVideo.mCanvas.drawColor(Color.BLACK);
+        handlePart(mVideo.mCanvas);
 
-        mVideo.mCanvas.drawColor(0xffecf0f1);
-        boolean djidjiDrawn = false;
+//          if (gingerPart) mGinger.update(mVideo.mCanvas);
 
-        for (int i = 0; i < bobblesCount; i++) {
-
-            if (i >= 24 && !djidjiDrawn) {
-                drawDjidji(mVideo.mCanvas);
-                djidjiDrawn = true;
-            }
-
-            bobbles.get(i).update(mVideo.mCanvas);
-        }
-
-        mScroller.update(mVideo.mCanvas);
-
-        if (end) drawEnd(mVideo.mCanvas);
-        if (lastPart) drawLastPart(mVideo.mCanvas);
+//        if (strechkoStart) Strechko.start(mVideo.mCanvas);
+//        if (strechkoStart) Strechko.stretch(mVideo.mCanvas);
+//        if (strechkoEnd) Strechko.end(mVideo.mCanvas);
 
         mVideo.update(canvas);
-
 
         displayFps(canvas, avgFps);
     }
@@ -118,8 +110,6 @@ public class MainPanel extends SurfaceView implements SurfaceHolder.Callback, On
     @Override
     public void surfaceCreated(SurfaceHolder surfaceHolder) {
         Log.i(TAG, "surface-created");
-        initBobbles();
-        mScroller = new Scroller(16, 22, this);
 
         mThread.running = true;
         mThread.start();
@@ -131,6 +121,7 @@ public class MainPanel extends SurfaceView implements SurfaceHolder.Callback, On
     @Override
     public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i2, int i3) {
         Log.i(TAG, "surface-changed");
+
     }
 
     @Override
@@ -156,7 +147,9 @@ public class MainPanel extends SurfaceView implements SurfaceHolder.Callback, On
         }
 
 
-//        Log.i(TAG, String.valueOf(screenWidth) + " " + String.valueOf(screenHeight) + " " + String.valueOf(density));
+        ((Activity)getContext()).finish();
+
+  //        Log.i(TAG, String.valueOf(screenWidth) + " " + String.valueOf(screenHeight) + " " + String.valueOf(density));
         Log.i(TAG, "thread shutdown clearly...");
     }
 
@@ -168,25 +161,7 @@ public class MainPanel extends SurfaceView implements SurfaceHolder.Callback, On
         screenHeight = h;
 
         mVideo = new Video(this);
-
-    }
-
-    public void initBobbles() {
-//        bobblesBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.boobles, mVideo.optionsNoScale);
-
-        for(int i = 0; i < bobblesCount; i++) {
-            bobbles.add(new Bobble(64, 64, 6, 1));
-        }
-    }
-
-    public void drawDjidji(Canvas canvas) {
-//        Log.i(TAG, String.valueOf(Video.djidjiX + " " + Video.djidjiY));
-//        Paint paint = new Paint();
-//        paint.setDither(false);
-//        paint.setAntiAlias(false);
-//        paint.setFilterBitmap(false);
-
-        canvas.drawBitmap(mVideo.djidji, Video.djidjiX, Video.djidjiY, null);
+        mGinger = new Ginger(mVideo, this);
     }
 
     public void setAvgFps(String avgFps) {
@@ -209,13 +184,7 @@ public class MainPanel extends SurfaceView implements SurfaceHolder.Callback, On
     @Override
     public boolean onTouch(View view, MotionEvent event) {
 //        Log.i(TAG, "touched=======:" + event.getX() + " " + event.getY());
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            for (Bobble b : bobbles) {
-                b.handleAction(event.getX(), event.getY());
-            }
-            return true;
-        }
-        return false;
+        return mGinger.handleEvent(event);
     }
 
     public static void playSample(int which) {
@@ -235,34 +204,50 @@ public class MainPanel extends SurfaceView implements SurfaceHolder.Callback, On
         }
     }
 
-    public void drawEnd(Canvas canvas) {
-        final float delta = (endOpacity - startOpacity);
-        startOpacity += delta * 0.009f;
-
-//        Log.i(TAG, "opac ----" + startOpacity + " " + endOpacity);
-
-        if (delta <= 4) {
-            startOpacity = 255;
-            endOpacity = 0;
-            end = false;
-            lastPart = true;
-//            ((Activity) getContext()).finish();
+    private void handlePart(Canvas canvas) {
+//        Log.i(TAG, "part---- " + part);
+        switch (part) {
+            case 0:
+                mGinger.update(canvas);
+                break;
+            case 1:
+                mGinger.update(canvas);
+                Tools.prepareFade(0, 255, 0xffffff, 0.05f);
+                part++;
+                break;
+            case 2:
+                mGinger.update(canvas);
+                boolean f = Tools.fade(canvas);
+                if (!f) part++;
+//                Log.i(TAG, "fade fini ----:" + f + "part: " + part);
+                break;
+            case 3:
+                canvas.drawColor(Color.WHITE);
+                Tools.prepareFade(255, 0, 0xffffff, 0.1f);
+                part++;
+                break;
+            case 4:
+                Strechko.stretch(canvas);
+                f = Tools.fade(canvas);
+                if (!f) part++;
+                break;
+            case 5:
+                Strechko.stretch(canvas);
+                break;
+            case 6:
+                Strechko.stretchAhmad(canvas);
+                break;
+            case 7:
+                Strechko.stretchIlkke(canvas);
+                break;
+            case 8:
+                endIntro = true;
+                break;
         }
-
-        canvas.drawColor((int) startOpacity << 24 | 0xffffff);
     }
 
-    public void drawLastPart(Canvas canvas) {
-        final float delta = (startOpacity - endOpacity);
-        startOpacity -= delta * 0.05f;
-
-        canvas.drawColor(Color.BLACK);
-        canvas.drawBitmap(mVideo.ilkke, (Video.width - 101) / 2, (Video.height - 125) / 2, null);
-        canvas.drawColor((int) startOpacity << 24 | 0xffffff);
-
-        if (delta <= 4) {
-            ((Activity) getContext()).finish();
-        }
-
+    public void exit() {
+        ((Activity) getContext()).finish();
     }
+
 }

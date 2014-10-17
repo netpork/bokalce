@@ -27,13 +27,16 @@ public class MyActivity extends Activity {
         mPanel = new MainPanel(this, metrics);
 
         setContentView(mPanel);
-
     }
 
     @Override
     public void onBackPressed() {
-//        super.onBackPressed();
-        mPanel.end = true;
+        if (MainPanel.endIntro) {
+            super.onBackPressed();
+            this.finish();
+        } else {
+            MainPanel.part++;
+        }
         Log.i(TAG, "------------------------------ back pressed");
     }
 

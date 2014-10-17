@@ -19,7 +19,8 @@ public class Video {
     private static float aspect;
     public static BitmapFactory.Options optionsNoScale;
 
-    public Bitmap djidji, ilkke;
+    public Bitmap djidji;
+    public static Bitmap nana, ahmad, ilkke;
     public static Bitmap bobl1, bobl2, bobl3, bobl4, bobl5, bobl6;
 
     public static final int djidjiX = (width - 96) / 2;
@@ -39,6 +40,8 @@ public class Video {
         optionsNoScale.inScaled = false;
 
         djidji = BitmapFactory.decodeResource(mPanel.getResources(), R.drawable.djidji, optionsNoScale);
+        nana = BitmapFactory.decodeResource(mPanel.getResources(), R.drawable.nana, optionsNoScale);
+        ahmad = BitmapFactory.decodeResource(mPanel.getResources(), R.drawable.ahmad, optionsNoScale);
         ilkke = BitmapFactory.decodeResource(mPanel.getResources(), R.drawable.ilkke, optionsNoScale);
         bobl1 = BitmapFactory.decodeResource(mPanel.getResources(), R.drawable.boobles1, optionsNoScale);
         bobl2 = BitmapFactory.decodeResource(mPanel.getResources(), R.drawable.boobles2, optionsNoScale);
