@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.media.MediaPlayer;
+import android.os.AsyncTask;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -21,7 +22,7 @@ import android.view.View.OnTouchListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
+import java.util.concurrent.ExecutionException;
 
 
 /**
@@ -29,25 +30,20 @@ import java.util.Random;
  */
 public class MainPanel extends SurfaceView implements SurfaceHolder.Callback, OnTouchListener {
     private static final String TAG = "MainPanel";
-    private ModMusic modPlayer;
+    protected static ModMusic modPlayer;
     private MainThread mThread;
-    private Video mVideo;
-    private Ginger mGinger;
+    protected Video mVideo;
+    protected Ginger mGinger;
 
-//    private Camera mCamera;
-//    private Matrix mMatrix;
-
-    private static Context context;
+    protected static Context context;
 
     public static int screenWidth, screenHeight;
     public static float density;
     public static final Random RND = new Random();
     public static final double radians = Math.PI / 180.0;
-    public double cameraZoom = 0;
-    private float lastTouchX, lastTouchY;
-    private static MediaPlayer plopSound1, plopSound2, plopSound3;
-    private float djidjiAngle = 0;
+    protected static MediaPlayer plopSound1, plopSound2, plopSound3;
 
+    private List<Part> introParts = new ArrayList<Part>();
 
     // section flags
     protected static int part = 0;
@@ -69,16 +65,16 @@ public class MainPanel extends SurfaceView implements SurfaceHolder.Callback, On
         setFocusable(true);
         setOnTouchListener(this);
 
-        plopSound1 = MediaPlayer.create(context, R.raw.plop0);
-        plopSound2 = MediaPlayer.create(context, R.raw.plop1);
-        plopSound3 = MediaPlayer.create(context, R.raw.plop2);
+
 
 //        mCamera = new Camera();
 //        mMatrix = new Matrix();
 
 //        mCamera.save();
 
+
         mThread = new MainThread(getHolder(), this);
+
 
     }
 
@@ -94,7 +90,8 @@ public class MainPanel extends SurfaceView implements SurfaceHolder.Callback, On
 
 //        canvas.drawColor(Color.RED);
 //        mVideo.mCanvas.drawColor(Color.BLACK);
-        handlePart(mVideo.mCanvas);
+//        handlePart(mVideo.mCanvas);
+        introParts.get(part).execute();
 
 //          if (gingerPart) mGinger.update(mVideo.mCanvas);
 
@@ -111,10 +108,16 @@ public class MainPanel extends SurfaceView implements SurfaceHolder.Callback, On
     public void surfaceCreated(SurfaceHolder surfaceHolder) {
         Log.i(TAG, "surface-created");
 
+        // preload
+        final Preload preload = new Preload(this);
+        preload.execute(123);
+    }
+
+    public void startMusicAndThread() {
         mThread.running = true;
         mThread.start();
 
-        modPlayer = new ModMusic(MainPanel.context, R.raw.xality);
+//        modPlayer = new ModMusic(MainPanel.context, R.raw.xality);
         modPlayer.play();
     }
 
@@ -162,6 +165,9 @@ public class MainPanel extends SurfaceView implements SurfaceHolder.Callback, On
 
         mVideo = new Video(this);
         mGinger = new Ginger(mVideo, this);
+
+        introParts.add(new GingerPart(this));
+        introParts.add(new StrechkoPart(this));
     }
 
     public void setAvgFps(String avgFps) {
@@ -204,50 +210,17 @@ public class MainPanel extends SurfaceView implements SurfaceHolder.Callback, On
         }
     }
 
-    private void handlePart(Canvas canvas) {
-//        Log.i(TAG, "part---- " + part);
-        switch (part) {
-            case 0:
-                mGinger.update(canvas);
-                break;
-            case 1:
-                mGinger.update(canvas);
-                Tools.prepareFade(0, 255, 0xffffff, 0.05f);
-                part++;
-                break;
-            case 2:
-                mGinger.update(canvas);
-                boolean f = Tools.fade(canvas);
-                if (!f) part++;
-//                Log.i(TAG, "fade fini ----:" + f + "part: " + part);
-                break;
-            case 3:
-                canvas.drawColor(Color.WHITE);
-                Tools.prepareFade(255, 0, 0xffffff, 0.1f);
-                part++;
-                break;
-            case 4:
-                Strechko.stretch(canvas);
-                f = Tools.fade(canvas);
-                if (!f) part++;
-                break;
-            case 5:
-                Strechko.stretch(canvas);
-                break;
-            case 6:
-                Strechko.stretchAhmad(canvas);
-                break;
-            case 7:
-                Strechko.stretchIlkke(canvas);
-                break;
-            case 8:
-                endIntro = true;
-                break;
-        }
-    }
 
     public void exit() {
         ((Activity) getContext()).finish();
+    }
+
+    public static void nextPart() {
+        part++;
+    }
+
+    public void enableEnd() {
+        introParts.get(part).enableEnd();
     }
 
 }

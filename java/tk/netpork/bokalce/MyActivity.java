@@ -35,7 +35,8 @@ public class MyActivity extends Activity {
             super.onBackPressed();
             this.finish();
         } else {
-            MainPanel.part++;
+            mPanel.enableEnd();
+//            MainPanel.part++;
         }
         Log.i(TAG, "------------------------------ back pressed");
     }

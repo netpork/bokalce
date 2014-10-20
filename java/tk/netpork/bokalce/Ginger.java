@@ -13,7 +13,6 @@ import java.util.List;
 public class Ginger {
 
     private List<Bobble> bobbles = new ArrayList<Bobble>();
-    private List<Object> parts = new ArrayList<Object>(){};
 
     private static final int bobblesCount = 50;
     private Bitmap bobblesBitmap;
@@ -60,7 +59,7 @@ public class Ginger {
 //        paint.setAntiAlias(false);
 //        paint.setFilterBitmap(false);
 
-        canvas.drawBitmap(mVideo.djidji, Video.djidjiX, Video.djidjiY, null);
+        canvas.drawBitmap(Video.djidji, Video.djidjiX, Video.djidjiY, null);
     }
 
     public boolean handleEvent(MotionEvent event) {

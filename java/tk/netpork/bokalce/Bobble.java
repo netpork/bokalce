@@ -6,8 +6,6 @@ import android.graphics.Canvas;
 public class Bobble extends Sprite {
     private static final String TAG = MainThread.class.getCanonicalName();
 
-    public Bitmap[] bubbles = {Video.bobl1, Video.bobl2, Video.bobl3, Video.bobl4, Video.bobl5, Video.bobl6};
-
     public Bobble(int tileWidth, int tileHeight, int frameCount, int animDelay) {
         super();
         this.frameCount = frameCount;
@@ -50,7 +48,7 @@ public class Bobble extends Sprite {
 
         angle += angleAdder;
         x = (int) (Math.sin(MainPanel.radians * angle) * offset) + (Video.width / 2) - tileWidth;
-        super.draw(c, (int) x, (int) y, tileWidth, tileHeight, bubbles[currentFrame]);
+        super.draw(c, (int) x, (int) y, tileWidth, tileHeight, Video.bubbles[currentFrame]);
     }
 
     public void handleAction(float eventX, float eventY) {

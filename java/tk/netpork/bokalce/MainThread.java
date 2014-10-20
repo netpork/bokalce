@@ -12,6 +12,7 @@ import java.text.DecimalFormat;
 public class MainThread extends Thread {
     private static final String TAG = "MainThread";
     private SurfaceHolder mHolder;
+    public static Canvas canvas;
     private MainPanel mPanel;
 
     //desired fps
@@ -58,7 +59,7 @@ public class MainThread extends Thread {
 
     @Override
     public void run() {
-        Canvas canvas;
+//        Canvas canvas;
 
         long beginTime;
         int sleepTime = 0, frameSkipped;
@@ -168,6 +169,10 @@ public class MainThread extends Thread {
             fpsStore[i] = 0.0;
         }
         Log.d(TAG + ".initTimingElements()", "Timing elements for stats initialised");
+    }
+
+    public static long getTimeDiff() {
+        return timeDiff;
     }
 
 }

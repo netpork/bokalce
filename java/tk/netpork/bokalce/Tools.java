@@ -32,6 +32,7 @@ public class Tools {
     }
 
     public static boolean fade(Canvas canvas) {
+//        Log.i(TAG, "ffffff: --- " + (tweenEnd - tweenStart));
         final float delta = tweenEnd - tweenStart;
         tweenStart += delta * tweenEase;
 
@@ -45,4 +46,23 @@ public class Tools {
             return true;
         }
     }
+
+    public static boolean fadeIn(Canvas canvas) {
+//        Log.i(TAG, "ffffff: --- " + (tweenEnd - tweenStart));
+        final float delta = tweenEnd - tweenStart;
+        tweenStart += delta * tweenEase;
+
+//        Log.i(TAG, "fade ------" + delta + " " + tweenStart);
+        if (Math.abs(delta) < 0.1) {
+            tweenStart = tweenEnd;
+            canvas.drawColor((int) tweenStart << 24 | fadeColor);
+            return false;
+        } else {
+            canvas.drawColor((int) tweenStart << 24 | fadeColor);
+            return true;
+        }
+    }
+
+
+
 }
