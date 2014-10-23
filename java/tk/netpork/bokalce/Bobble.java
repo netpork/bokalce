@@ -1,7 +1,7 @@
 package tk.netpork.bokalce;
 
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.util.Log;
 
 public class Bobble extends Sprite {
     private static final String TAG = MainThread.class.getCanonicalName();
@@ -31,7 +31,7 @@ public class Bobble extends Sprite {
                     MainPanel.playSample(MainPanel.RND.nextInt(3));
                 }
                 currentFrame++;
-                yAdder = -(MainPanel.RND.nextInt(10));
+                yAdder = (MainPanel.RND.nextInt(10));
             }
         }
 
@@ -41,12 +41,18 @@ public class Bobble extends Sprite {
 
 
         if (y >= -tileWidth) {
-            y -= yAdder;
+//            y -= yAdder;
+
+            y -= ((Math.sin(MainPanel.radians * yAngle) * yAdder) + 2);
+//            final double r = (Math.sin(MainPanel.radians * yAngle) * yDelay);
+//            Log.i(TAG, "----------------r: " + yDelay);
         } else {
             newBubble();
         }
 
         angle += angleAdder;
+        yAngle += angleAdder;
+
         x = (int) (Math.sin(MainPanel.radians * angle) * offset) + (Video.width / 2) - tileWidth;
         super.draw(c, (int) x, (int) y, tileWidth, tileHeight, Video.bubbles[currentFrame]);
     }
@@ -83,22 +89,5 @@ public class Bobble extends Sprite {
 //        }
     }
 
-    public void newBubble() {
-        x = MainPanel.RND.nextInt(Video.width - tileWidth);
-        y = Video.height + tileHeight;
-//        y = MainPanel.RND.nextInt(Video.height - tileHeight);
-        offset = MainPanel.RND.nextDouble() * Video.width / 2;
-        angleAdder = MainPanel.RND.nextDouble() * 5;
-        yAdder = (MainPanel.RND.nextDouble() * 5) + 0.5;
-        currentFrame = 0;
-        setTouched(false);
-    }
 
-    public boolean isTouched() {
-        return touched;
-    }
-
-    public void setTouched(boolean touched) {
-        this.touched = touched;
-    }
 }

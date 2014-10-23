@@ -11,7 +11,7 @@ public class Sprite {
     public boolean touched;
     public double x, y;
     public int frameCount, tileWidth, tileHeight, animDelay, tickDelay = 0, currentFrame = 0;
-    public double offset, angle, angleAdder, yAdder;
+    public double offset, angle, yAngle, angleAdder, yAdder;
 
 
     public Sprite() {}
@@ -21,6 +21,25 @@ public class Sprite {
 //        Rect dst = new Rect(x, y, x + width, y + height);
 //        Log.i(TAG, "--------------- " + bobble);
         c.drawBitmap(bobble, x, y, null);
+    }
+
+    public void newBubble() {
+        x = MainPanel.RND.nextInt(Video.width - tileWidth);
+        y = Video.height + tileHeight;
+//        y = MainPanel.RND.nextInt(Video.height - tileHeight);
+        offset = MainPanel.RND.nextDouble() * Video.width / 2;
+        angleAdder = MainPanel.RND.nextDouble() * 5;
+        yAdder = (MainPanel.RND.nextDouble() * 2) + 0.5;
+        currentFrame = 0;
+        setTouched(false);
+    }
+
+    public boolean isTouched() {
+        return touched;
+    }
+
+    public void setTouched(boolean touched) {
+        this.touched = touched;
     }
 
 }
