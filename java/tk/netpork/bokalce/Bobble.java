@@ -43,7 +43,7 @@ public class Bobble extends Sprite {
         if (y >= -tileWidth) {
 //            y -= yAdder;
 
-            y -= ((Math.sin(MainPanel.radians * yAngle) * yAdder) + 2);
+            y -= ((Math.sin(MainPanel.radians * yAngle) * yAdder) + 1.7);
 //            final double r = (Math.sin(MainPanel.radians * yAngle) * yDelay);
 //            Log.i(TAG, "----------------r: " + yDelay);
         } else {
