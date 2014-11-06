@@ -31,7 +31,10 @@ public class GingerPart implements Part {
     @Override
     public void end() {
         boolean f = mFade.fadeScreen(mCanvas);
-        if (!f) MainPanel.nextPart();
+        if (!f)  {
+            MainPanel.nextPart();
+            mFade = null;
+        }
     }
 
     @Override

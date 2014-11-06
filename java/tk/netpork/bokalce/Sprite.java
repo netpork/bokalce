@@ -7,7 +7,7 @@ import android.util.Log;
 public class Sprite {
     private static final String TAG = "Sprite";
 
-    private Bitmap bobble;
+//    private Bitmap bobble;
     public boolean touched;
     public double x, y;
     public int frameCount, tileWidth, tileHeight, animDelay, tickDelay = 0, currentFrame = 0;
@@ -25,10 +25,10 @@ public class Sprite {
 
     public void newBubble() {
         x = MainPanel.RND.nextInt(Video.width - tileWidth);
-        y = Video.height + tileHeight;
-//        y = MainPanel.RND.nextInt(Video.height - tileHeight);
+//        y = Video.height + tileHeight;
+        y = Video.height + MainPanel.RND.nextInt(tileHeight << 1);
         offset = MainPanel.RND.nextDouble() * Video.width / 2;
-        angleAdder = MainPanel.RND.nextDouble() * 5;
+        angleAdder = MainPanel.RND.nextDouble() * 3;
         yAdder = (MainPanel.RND.nextDouble() * 2) + 0.5;
         currentFrame = 0;
         setTouched(false);

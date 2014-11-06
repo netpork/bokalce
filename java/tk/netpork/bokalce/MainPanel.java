@@ -26,8 +26,11 @@ public class MainPanel extends SurfaceView implements SurfaceHolder.Callback, On
     private static final String TAG = "MainPanel";
     protected static ModMusic modPlayer;
     private MainThread mThread;
+
     protected Video mVideo;
     protected Ginger mGinger;
+    protected LogoTween mLogoTween;
+
 
     protected static Context context;
 
@@ -40,7 +43,7 @@ public class MainPanel extends SurfaceView implements SurfaceHolder.Callback, On
     private List<Part> introParts = new ArrayList<Part>();
 
     // section flags
-    protected static int part = 0;
+    protected static int part = 2;
     protected static boolean endIntro = false;
 
     public static boolean gingerPart = true;
@@ -59,24 +62,16 @@ public class MainPanel extends SurfaceView implements SurfaceHolder.Callback, On
         setFocusable(true);
         setOnTouchListener(this);
 
-
-
 //        mCamera = new Camera();
 //        mMatrix = new Matrix();
 
 //        mCamera.save();
 
-
         mThread = new MainThread(getHolder(), this);
-
-
     }
 
     public void update(Canvas canvas) {
 //        Log.i(TAG, "***** update");
-
-
-
     }
 
     public void render(Canvas canvas) {
@@ -159,9 +154,12 @@ public class MainPanel extends SurfaceView implements SurfaceHolder.Callback, On
 
         mVideo = new Video(this);
         mGinger = new Ginger(mVideo, this);
+        mLogoTween = new LogoTween(this, mVideo);
+
 
         introParts.add(new GingerPart(this));
         introParts.add(new StrechkoPart(this));
+        introParts.add(new LogoTweenPart(this));
     }
 
     public void setAvgFps(String avgFps) {
@@ -203,7 +201,6 @@ public class MainPanel extends SurfaceView implements SurfaceHolder.Callback, On
                 break;
         }
     }
-
 
     public void exit() {
         ((Activity) getContext()).finish();
