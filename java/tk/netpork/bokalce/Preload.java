@@ -23,6 +23,10 @@ public class Preload extends AsyncTask <Integer, Void, Integer>{
         Video.nana = BitmapFactory.decodeResource(mPanel.getResources(), R.drawable.nana, Video.optionsNoScale);
         Video.ahmad = BitmapFactory.decodeResource(mPanel.getResources(), R.drawable.ahmad, Video.optionsNoScale);
         Video.ilkke = BitmapFactory.decodeResource(mPanel.getResources(), R.drawable.ilkke, Video.optionsNoScale);
+        Video.sprite = BitmapFactory.decodeResource(mPanel.getResources(), R.drawable.sprite_128x128, Video.optionsNoScale);
+
+        Video.sprite.getPixels(Video.spritePixels, 0, Video.spriteWidth, 0, 0, Video.spriteWidth, Video.spriteHeight);
+//        Log.i(TAG, "--------x" + Video.sprite.getWidth() + " ------y" + Video.sprite.getHeight());
 
         Video.bubbles[0] = BitmapFactory.decodeResource(mPanel.getResources(), R.drawable.boobles1, Video.optionsNoScale);
         Video.bubbles[1] = BitmapFactory.decodeResource(mPanel.getResources(), R.drawable.boobles2, Video.optionsNoScale);

@@ -25,7 +25,6 @@ public class MyActivity extends Activity {
 //        Log.i(TAG, String.valueOf(metrics.widthPixels) + " " + String.valueOf(metrics.heightPixels));
 
         mPanel = new MainPanel(this, metrics);
-
         setContentView(mPanel);
     }
 

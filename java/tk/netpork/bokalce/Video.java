@@ -12,15 +12,21 @@ public class Video {
     public static final String TAG = "Video";
 
     public Canvas mCanvas;
-    private Bitmap mBitmap;
+    public Bitmap mBitmap;
+
     private MainPanel mPanel;
     public static final int width  = 320;
     public static final int height = 180;
+
+    public static final int spriteWidth = 128;
+    public static final int spriteHeight = 128;
+    public static int[] spritePixels = new int[spriteWidth * spriteHeight];
+
     private static float aspect;
     public static BitmapFactory.Options optionsNoScale;
 
     public static Bitmap djidji;
-    public static Bitmap nana, ahmad, ilkke;
+    public static Bitmap nana, ahmad, ilkke, sprite;
     public static Bitmap[] bubbles = new Bitmap[6];
 
     public static final int djidjiX = (width - 96) / 2;

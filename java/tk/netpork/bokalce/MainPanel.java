@@ -30,7 +30,7 @@ public class MainPanel extends SurfaceView implements SurfaceHolder.Callback, On
     protected Video mVideo;
     protected Ginger mGinger;
     protected LogoTween mLogoTween;
-
+    protected Rotozoom mRotozoom;
 
     protected static Context context;
 
@@ -43,7 +43,7 @@ public class MainPanel extends SurfaceView implements SurfaceHolder.Callback, On
     private List<Part> introParts = new ArrayList<Part>();
 
     // section flags
-    protected static int part = 2;
+    protected static int part = 3;
     protected static boolean endIntro = false;
 
     public static boolean gingerPart = true;
@@ -66,6 +66,7 @@ public class MainPanel extends SurfaceView implements SurfaceHolder.Callback, On
 //        mMatrix = new Matrix();
 
 //        mCamera.save();
+//        setSystemUiVisibility(SYSTEM_UI_FLAG_HIDE_NAVIGATION | SYSTEM_UI_FLAG_IMMERSIVE);
 
         mThread = new MainThread(getHolder(), this);
     }
@@ -154,12 +155,23 @@ public class MainPanel extends SurfaceView implements SurfaceHolder.Callback, On
 
         mVideo = new Video(this);
         mGinger = new Ginger(mVideo, this);
-        mLogoTween = new LogoTween(this, mVideo);
 
+        try {
+            mLogoTween = new LogoTween(this, mVideo);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        mRotozoom = new Rotozoom(mVideo, this);
 
         introParts.add(new GingerPart(this));
         introParts.add(new StrechkoPart(this));
         introParts.add(new LogoTweenPart(this));
+        introParts.add(new RotozoomPart(this));
     }
 
     public void setAvgFps(String avgFps) {
